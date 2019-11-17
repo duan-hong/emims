@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>数据表</title>
+    <!--<link rel="stylesheet" type="text/cs th:href="@{/static/layui-v2.4.5/layui/css/modules/laydate/default/laydate.css}"/>-->
+    <link rel="stylesheet" type="text/css" th:href="@{/static/layui-v2.4.5/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/admin.css}"/>
+    <style type="text/css">
+        .layui-input, .layui-select, .layui-textarea{
+            height: 30px!important;
+        }
+        .layui-form-item{
+            margin-bottom: 0px;
+        }
+        .layui-form-item .layui-input-inline{
+            width: 135px;
+        }
+        .layui-form-select .layui-input{
+            padding-right: 0px!important;
+        }
+        .layui-select-title input{
+            width: 120px;
+        }
+        .layui-form-item{
+            margin-left: 10px;
+        }
+        .layui-form-label{
+            line-height: 15px;
+            width: 45px!important;
+            padding: 9px 0px!important;
+        }
+        .layui-table-tool{
+            padding: 0px;
+        }
+        /*.layui-form-selected .layui-edge{
+            margin-top: -20px;
+        }
+        .layui-form-select .layui-edge{
+            margin-top: -15px;
+        }*/
+
+        .layui-table-cell{
+            height:35px!important;
+            line-height: 35px!important;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-col-md12">
+
+    <div class="layui-row">
+        <div class="layui-card">
+            <!--<div class="layui-card-header" id="dataTableHeader">
+                温度数据
+            </div>-->
+            <div class="layui-card-body">
+                <table id="dataTable" lay-filter="dataTable"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--<script th:src="@{/static/layDate-v5.0.9/laydate/laydate.js}"></script>-->
+<script th:src="@{/static/js/jquery-latest.js}"></script>
+<script th:src="@{/static/layui-v2.4.5/layui/layui.js}"></script>
+<script>
+    layui.use(['element', 'tree', 'table', 'layer', 'form', 'laydate'], function () {
+        var element = layui.element;
+        var tree = layui.tree;
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        var layDate = layui.laydate;
+        form.render();
+        element.init()
+
+        var dataTableCols =
+            [
+                [
+                    {checkbox: true},
+                    {field: 'saveTime', title: '时间',width:150},
+                    {field: 'temperature', title: '温度',width:80},
+                    {field: 'longtitude', title: '经度',width:80},
+                    {field: 'latitude', title: '纬度',width:80},
+                    {field: 'altitude', title: '海拔',width:80},
+                    {field: 'location', title: '位置',width:200},
+                    {field: 'deviceId', title: '设备号',width:150},
+                    {fixed: 'right', title: '操作', align: 'center', toolbar: '#menuTblToolBar'}
+                ]
+            ];
+        var dataTableOptions = {
+            elem: '#dataTable',
+            url: '/emims/getT',
+            toolbar: '#toolbar',
+            method: 'get',
+            request: {
+                pageName: 'page',
+                limitName: 'size'
+            },
+            response: {
+                statusName: 'status', //规定数据状态的字段名称，默认：code
+                statusCode: 200, //规定成功的状态码，默认：0
+                msgName: 'message', //规定状态信息的字段名称，默认：msg
+                countName: 'totalCount', //规定数据总数的字段名称，默认：count
+                dataName: 'data' //规定数据列表的字段名称，默认：data
+            },
+            // contentType: 'application/json',
+            // height: 350,
+            page: true,
+            limit:10,
+            cols: dataTableCols,
+            even: true,
+            size: 'sm',
+            done: function (res, curr, count) {
+                //如果是异步请求数据方式，res即为你接口返回的信息。
+                //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                console.log(res);
+
+                //得到当前页码
+                console.log(curr);
+
+                //得到数据总量
+                console.log(count);
+            },
+            text: {
+                none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            }
+        }
+
+        table.on('tool(dataTable)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'detail') { //查看
+
+                //do somehing
+            } else if (layEvent === 'del') { //删除
+                layer.confirm('你他妈试试', function (index) {
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    //向服务端发送删除指令
+                    $.ajax({
+                        url: '/emims/api/menu/' + data.id,
+                        type: 'delete',
+                        success: function (data) {
+                            layer.msg(data.message)
+                        },
+                        fail: function (data) {
+
+                        }
+                    })
+                    layer.close(index);
+                });
+            } else if (layEvent === 'edit') { //编辑
+                //do something
+
+                //同步更新缓存对应的值
+                obj.update({
+                    username: '123'
+                    , title: 'xxx'
+                });
+            }
+        });
+        //表格初始化
+        table.init('dataTable', dataTableOptions);
+
+        laydate.render({
+            elem: '#stratDate' //指定元素
+        });
+        laydate.render({
+            elem: '#endDate' //指定元素
+        });
+    })
+</script>
+<script type="text/html" id="toolbar">
+    <div class="layui-row">
+        <form class="layui-form">
+            <div class="layui-row" style="display: flex;padding: 5px">
+                <div class="layui-form-item">
+                    <select name="数据类型" lay-verify="required">
+                        <option value="temp">数据类型</option>
+                        <option value="temp">温度</option>
+                        <option value="humity">湿度</option>
+                        <option value="airP">大气压</option>
+                        <option value="">紫外线</option>
+                        <option value="">光照强度</option>
+                        <option value="pm">pm2.5</option>
+                    </select>
+                </div>
+                <div class="layui-form-item">
+                    <select name="时间间隔" lay-verify="required">
+                        <option value="temp">时间间隔</option>
+                        <option value="temp">5分钟</option>
+                        <option value="humity">15分钟</option>
+                        <option value="airP">20分钟</option>
+                        <option value="">30分钟</option>
+                        <option value="">60分钟</option>
+                    </select>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        开始：
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="date" placeholder="开始日期" id="stratDate" style="border: none;margin: 0px;"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">
+                        结束：
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="date" placeholder="结束日期" id="endDate" style="border: none;margin: 0px"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">位置:</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" name="price_min" placeholder="longtitude" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid" style="line-height: 13px">-</div>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" name="price_max" placeholder="latitude" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+
+<script type="text/html" id="menuTblToolBar">
+    <a class="layui-btn layui-btn-sm" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-sm" lay-event="del">删除</a>
+    <!-- 这里同样支持 laytpl 语法，如： -->
+    {{#  if(d.auth > 2){ }}
+    <a class="layui-btn layui-btn-xs" lay-event="check">审核</a>
+    {{#  } }}
+</script>
+</body>
+</html>

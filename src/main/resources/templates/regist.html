@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html class="login-bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>注册</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!-- bootstrap -->
+    <link href="/emims/static/css/bootstrap/bootstrap.css" rel="stylesheet"/>
+    <link href="/emims/static/css/bootstrap/bootstrap-responsive.css" rel="stylesheet"/>
+    <link href="/emims/static/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet"/>
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/layout.css"/>
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/elements.css"/>
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/icons.css"/>
+
+    <link rel="stylesheet" type="text/css" href="/emims/static/layui/layui.css"/>
+    <link rel="stylesheet" type="text/css" href="/emims/static/layui/layui.mobile.css"/>
+
+    <!-- libraries -->
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/lib/font-awesome.css"/>
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="/emims/static/common/css/commonStyle.css" type="text/css"/>
+    <link rel="stylesheet" href="/emims/static/css/compiled/signin.css" type="text/css" media="screen"/>
+
+
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+
+    <style>
+        .login-wrapper .box input[type="text"], .login-wrapper .box input[type="password"] {
+            font-size: 15px;
+            height: 40px;
+            /* margin-bottom: 18px; */
+            border-color: #b2bfc7;
+            padding-left: 12px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="row-fluid login-wrapper">
+    <a href="http://localhost:8080/emims/pages/index">
+        <img class="logo" src="/emims/static/img/logo-white.png"/>
+    </a>
+
+    <div class="span4 box">
+        <div class="content-wrap">
+            <h6>注 册</h6>
+            <form name="registForm" method="post" style="margin: 0px" accept-charset="UTF-8">
+                <input class="span12" type="text" name="userName" autocomplete="off" id="userName" placeholder="用户名"
+                       style="margin-bottom: 10px"/>
+                <input class="span12" type="password" name="userPwd" autocomplete="off" id="userPwd" placeholder="密码"/>
+                <input class="span12" type="password" name="userPwd2" autocomplete="off" id="userPwd2" placeholder="确认密码"/>
+                <input class="span12" type="text" name="mail" id="mail" placeholder="邮箱" style="margin-bottom: 10px"/>
+                <div class="inp-btn">
+                    <input class="span12" autocomplete="off" type="text" name="yzm" id="yzm" placeholder="验证码"
+                           style="margin-bottom: 10px"/>
+                    <button class="yzm-btn" type="button" onclick="sendYzm()" id="yzmBtn">
+                        发送验证码
+                    </button>
+                </div>
+                <div class="info-list" style="margin-bottom: 0px">
+                    <label class="info-remind-color-error" id="regist-info"></label>
+                </div>
+            </form>
+            <button class="btn-glow primary login" id="regist-btn" onclick="regist()">
+                注&nbsp&nbsp册
+            </button>
+        </div>
+    </div>
+
+    <div class="span4 no-account">
+        <p>直接登录？</p>
+        <a href="http://localhost:8080/emims/pages/index">登录</a>
+    </div>
+</div>
+
+<!-- scripts -->
+<script src="/emims/static/js/jquery-latest.js"></script>
+<script src="/emims/static/js/bootstrap.min.js"></script>
+<script src="/emims/static/js/theme.js"></script>
+<script src="/emims/static/common/apiUrl.js"></script>
+
+<script src="/emims/static/layui/layui.all.js"></script>
+<script src="/emims/static/layui/layui.js"></script>
+
+<!--登录函数-->
+<script type="text/javascript">
+
+    function infoCheck() {
+        let userName = $("#userName").val();
+        let userPwd = $("#userPwd").val();
+        let userPwd2 = $("#userPwd2").val();
+        let mail = $("#mail").val();
+        if (userName == "" || userPwd == "" || userPwd2 == "" || mail == "") {
+            return "请补全信息";
+        }
+        else if (userPwd != userPwd2) {
+            return "密码不一致";
+        }else {
+            return "";
+        }
+    }
+
+    /*发送验证计时器*/
+    function startYzmInterval() {
+        var yzmBtn = document.getElementById("yzmBtn");
+        yzmBtn.disabled = "disabled";
+        var time = 60;
+        var yzmIntertval = window.setInterval(function () {
+            document.getElementById("yzmBtn").innerText = "重新发送(" + time + "s)后";
+            time--;
+            if (time <= 0) {
+                window.clearInterval(yzmIntertval);
+                document.getElementById("yzmBtn").innerText = "重新发送";
+                yzmBtn.disabled = "";
+            }
+        }, 1000);
+    }
+
+    /*发送验证码*/
+    function sendYzm() {
+        let info=infoCheck();
+        if (info!="") {
+            $("#regist-info").text(info);
+            return;
+        }
+        startYzmInterval();
+        $.ajax({
+            url: BASE_PATH + SENDYZM,
+            data: {
+                mailAddress: $("#mail").val(),
+            },
+            type: 'post',
+            success: function (data) {
+                var registInfo=document.getElementById("regist-info");
+                alert(data);
+                if (data==1){
+                    layer.msg('验证码发送成功');
+                    registInfo.className="info-remind-color-success";
+                    registInfo.innerText="验证码发送成功";
+                }else {
+                    registInfo.className="info-remind-color-error";
+                    registInfo.innerText="验证码发送失败";
+                }
+            }
+        });
+    }
+
+    /*注册*/
+    function regist() {
+
+        $.ajax({
+            url: BASE_PATH + REGIST_CHECK_API,
+            type: 'post',
+            data: {
+                userName: $("#userName").val(),
+                yzm: $("#yzm").val()
+            },
+            success: function (data) {
+                //注册成功
+                if (data=="\"1\"") {
+                    $("#regist-btn").text("注册成功");
+                    registForm.action=BASE_PATH+REGIST;
+                    registForm.submit();
+                    return;
+                } else if (data=="\"0\"") {
+                    buttText.text("用户名已注册");
+                    $("#regist-btn").text("注  册");
+                } else if (data=="\"2\""){
+                    buttText.text("验证码错误");
+                    $("#regist-btn").text("注  册");
+                } else if (data=="\"重新发送验证码\"") {
+                    buttText.text(data);
+                    $("#regist-btn").text("注  册");
+                }
+
+            }
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+.inner-container {
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+/* for Chrome 只针对谷歌浏览器*/
+.inner-container::-webkit-scrollbar {
+    display: none;
+}
+
+.outer-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.inp-btn{
+    display: flex;
+    position: relative;
+}
+.yzm-btn{
+    position: absolute;
+    right: 0px;
+    top: 1px;
+    height: 38px;
+    border-radius:0px 4px 4px 0px;
+    outline: none;
+    border: none;
+}
+.yzm-btn:hover{
+    background-color: gainsboro;
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>EMIMS-首页</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" type="text/css" th:href="@{/static/layui-v2.4.5/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/admin.css}"/>
+
+    <!--<script src="https://hm.baidu.com/hm.js?d214947968792b839fd669a4decaaffc"></script>-->
+    <!--<script>
+        /^http(s*):\/\//.test(location.href) || alert('请先部署到 localhost 下再访问');
+    </script>-->
+    <!--<link id="layuicss-layer" rel="stylesheet"
+          href="https://www.layui.com/admin/std/dist/layuiadmin/layui/css/modules/layer/default/layer.css?v=3.1.1"
+          media="all">-->
+</head>
+<body class="layui-layout-body" layadmin-themealias="default">
+
+<div id="LAY_app">
+    <div class="layui-layout layui-layout-admin">
+
+        <div class="layui-header">
+            <!-- 头部区域 -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item layadmin-flexible" lay-unselect="">
+                    <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+                        <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+                    </a>
+                </li>
+                <li class="layui-nav-item" lay-unselect="" id="breadcrumb">
+                    <span class="layui-breadcrumb" lay-separator=">>">
+                        <a href="javascript:;" onclick="goPage('charts',107)">数据图</a>
+                    </span>
+                </li>
+                <span class="layui-nav-bar" style="left: 198px; top: 48px; width: 0px; opacity: 0;"></span>
+            </ul>
+            <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+                <li class="layui-nav-item layui-hide-xs" lay-unselect="">
+                    <input type="text" placeholder="搜索..." autocomplete="off" class="layui-input layui-input-search"
+                           layadmin-event="serach" lay-action="template/search.html?keywords=">
+                </li>
+                <li class="layui-nav-item" lay-unselect="">
+                    <a href="javascript:;" layadmin-event="message" lay-text="消息中心" onclick="watchAlarm()">
+                        <i class="layui-icon layui-icon-notice"></i>
+                        <!-- 如果有新消息，则显示小圆点 -->
+                        <span class="layui-badge-dot"></span>
+                    </a>
+                </li>
+                <li class="layui-nav-item" lay-unselect="">
+                    <a href=""><img th:src="@{/static/img/me.png}" class="layui-nav-img">我</a>
+                    <dl class="layui-nav-child">
+                        <dd><a lay-href="set/user/info.html">基本资料</a></dd>
+                        <dd><a lay-href="set/user/password.html">修改密码</a></dd>
+                        <hr>
+                        <dd layadmin-event="logout" style="text-align: center;"><a>退出</a></dd>
+                    </dl>
+                </li>
+
+                <li class="layui-nav-item layui-hide-xs" lay-unselect="">
+                    <a href="javascript:;" layadmin-event="about"><i
+                            class="layui-icon layui-icon-more-vertical"></i></a>
+                </li>
+                <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-unselect="">
+                    <a href="javascript:;" layadmin-event="more"><i class="layui-icon layui-icon-more-vertical"></i></a>
+                </li>
+                <!--<span class="layui-nav-bar"></span>-->
+            </ul>
+        </div>
+
+        <!-- 侧边菜单 -->
+        <div class="layui-side layui-side-menu">
+            <div class="layui-side-scroll">
+                <div class="layui-logo" lay-href="home/console.html">
+                    <span>STM32-环测服务系统</span>
+                </div>
+                <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu"
+                    lay-filter="layadmin-system-side-menu">
+                    <li data-name="home" class="layui-nav-item" th:each="node:${noSonsNode}">
+                        <a href="javascript:;" lay-tips="主页" lay-direction="2" th:data-bind="${node.href}" th:id="${node.id}" onclick="goPage(this.getAttribute('data-bind'),this.getAttribute('id'))">
+                            <i class="layui-icon layui-icon-home"></i>
+                            <cite th:text="${node.name}">node ...</cite>
+                        </a>
+                    </li>
+                    <li data-name="home" class="layui-nav-item" th:each="node:${allNode}" th:if="${node.children.size()}">
+                        <a href="javascript:;" lay-tips="主页" lay-direction="2">
+                            <i class="layui-icon layui-icon-home"></i>
+                            <cite th:text="${node.name}">node ...</cite>
+                            <span class="layui-nav-more"></span>
+                        </a>
+                        <dl class="layui-nav-child" th:each="child:${node.children}">
+                            <dd>
+                                <a href="javascript:;" th:text="${child.name}" th:data-bind="${child.href}" th:id="${child.id}" onclick="goPage(this.getAttribute('data-bind'),this.getAttribute('id'))">node ...</a>
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- 主体内容 -->
+        <div class="layui-body" id="LAY_app_body">
+            <div class="layadmin-tabsbody-item layui-show">
+                <iframe src="http://duanhong.top:8088/emims/api/getPageByName?pageName=charts" frameborder="0"
+                        class="layadmin-iframe" id="main-content"></iframe>
+            </div>
+        </div>
+        <!-- 辅助元素，一般用于移动设备下遮罩 -->
+        <div class="layadmin-body-shade" layadmin-event="shade"></div>
+    </div>
+</div>
+<script th:src="@{/static/js/jquery-latest.js}"></script>
+<script th:src="@{/static/layui-v2.4.5/layui/layui.js}"></script>
+<script>
+    layui.use(['element','form'], function(){
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+        var form=layui.form;
+        window.watchAlarm=function(){
+            goPage("alarm-manage",137);
+        }
+        window.goPage=function(pageName,id){
+            //加载页面
+            let url='/emims/api/getPageByName?pageName='+pageName;
+            $(document).ready(function () {
+                $("#main-content").attr('src',url);
+            });
+            //加载面包屑
+            $.ajax({
+                url:'/emims/api/menu/'+id,
+                type:'get',
+                success:function (data) {
+                    var breadcrumbs=data.data;
+                    var breadcrumb=$("#breadcrumb");
+                    breadcrumb.empty();
+                    var crumbArr=new Array();
+                    if (data.data != null && breadcrumbs.length > 0) {
+                        for (var i = breadcrumbs.length-1; i >=0; i--) {
+                            var crumb="<a href=\"javascript:;\" onclick='goPage(\""+breadcrumbs[i].url+"\","+breadcrumbs[i].id+")'>"+breadcrumbs[i].nodeName+"</a>";
+                            crumbArr.push(crumb);
+                        }
+                        var spanCrumb=document.createElement("span");
+                        spanCrumb['className']="layui-breadcrumb";
+                        spanCrumb.setAttribute("lay-separator",">>");
+                        spanCrumb.innerHTML=crumbArr.join("");
+                        document.getElementById("breadcrumb").appendChild(spanCrumb)
+                        element.init();
+                        form.render();
+                    }
+
+                    console.log(data.data)
+                }
+            });
+        }
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+<style id="LAY_layadmin_theme">
+    .layui-breadcrumb{
+        display: flex!important;
+    }
+    .layui-side-menu, .layadmin-pagetabs .layui-tab-title li:after, .layadmin-pagetabs .layui-tab-title li.layui-this:after, .layui-layer-admin .layui-layer-title, .layadmin-side-shrink .layui-side-menu .layui-nav > .layui-nav-item > .layui-nav-child {
+        background-color: #20222A !important;
+    }
+
+    .layui-nav-tree .layui-this, .layui-nav-tree .layui-this > a, .layui-nav-tree .layui-nav-child dd.layui-this, .layui-nav-tree .layui-nav-child dd.layui-this a {
+        background-color: #009688 !important;
+    }
+
+    .layui-layout-admin .layui-logo {
+        background-color: #20222A !important;
+    }
+</style>
+</body>
+</html>

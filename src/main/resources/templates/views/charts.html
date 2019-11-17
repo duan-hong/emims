@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>数据图</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link rel="stylesheet" href="/emims/static/css/compiled/chart-showcase.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/layout.css"/>
+    <link href="/emims/static/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <link href="/emims/static/bootstrap-table/dist/bootstrap-table.min.css">
+    <link href="/emims/static/bootstrap-table/dist/bootstrap-table.css">
+    <link href="/emims/static/css/bootstrap/bootstrap-responsive.css" rel="stylesheet"/>
+    <link href="/emims/static/css/lib/bootstrap.datepicker.css" type="text/css" rel="stylesheet"/>
+
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/layout.css"/>
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/elements.css"/>
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/icons.css"/>
+    <link rel="stylesheet" type="text/css" href="/emims/static/common/css/commonStyle.css"/>
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/static/layui-v2.4.5/layui/css/modules/laydate/default/laydate.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/layui-v2.4.5/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/admin.css}"/>
+    <!-- libraries -->
+    <link href="/emims/static/css/lib/font-awesome.css" type="text/css" rel="stylesheet"/>
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="/emims/static/css/compiled/tables.css" type="text/css" media="screen"/>
+
+    <link rel="stylesheet" type="text/css" href="/emims/static/common/css/commonStyle.css"/>
+
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+        .layui-form-label{
+            width: 25%!important;
+            padding: 9px 0px!important;
+            text-align: center;
+        }
+        .layui-form-item {
+            display: flex!important;
+            justify-content: center!important;
+        }
+        .layui-form-item .layui-input-inline{
+            width: 81%;!important;
+        }
+    </style>
+</head>
+<body class="inner-container">
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space5" id="charts-up">
+        <div class="layui-col-md9">
+            <div class="layui-row" style="background-color: white;padding: 10px">
+                <div style="float: left;
+                            margin-right: 20px;
+                            display: flex;
+                            align-items: center;
+                            font-size: 13px;
+                            color: #737f8d;
+                            line-height: 25px;">
+                    <input type="checkbox" class="checkbox" style="margin: 0px">动态展示
+                </div>
+                开始：
+                <div class="ui-select">
+                    <input type="text" placeholder="开始日期" class="datepicker" id="stratDate"
+                           style="border: none;margin: 0px">
+                </div>
+                截止：
+                <div class="ui-select">
+                    <input type="text" placeholder="结束日期" class="datepicker" id="endDate"
+                           style="border: none;margin: 0px">
+                </div>
+            </div>
+            <div class="layui-row" style="background-color: white;padding: 10px">
+                <div id="emims-chart" style="height: 380px;"></div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-row">
+                <div class="layui-card" style="height: 445px">
+                    <div class="layui-card-header">
+                        数据摘要
+                    </div>
+                    <div class="layui-card-body">
+                        <form class="layui-form" action="" style="width: 100%">
+                            <div class="layui-form-item" style="width: 100%">
+                                <label class="layui-form-label">温度</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="temp" required lay-verify="required"
+                                           placeholder="温度"
+                                           autocomplete="off" class="layui-input" readonly>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">湿度</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="hum" required lay-verify="required"
+                                           placeholder="湿度"
+                                           autocomplete="off" class="layui-input" readonly>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">大气压</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="ariP" required lay-verify="required"
+                                           placeholder="大气压"
+                                           autocomplete="off" class="layui-input" readonly>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">PM2.5</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="pm" required lay-verify="required"
+                                           placeholder="PM2.5"
+                                           autocomplete="off" class="layui-input" readonly>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">紫外线</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="password" required lay-verify="required"
+                                           placeholder="紫外线"
+                                           autocomplete="off" class="layui-input" readonly>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">光照</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="password" required lay-verify="required"
+                                           placeholder="光照"
+                                           autocomplete="off" class="layui-input" readonly>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row" id="charts-down">
+        <table id="dataGather" lay-filter="dataGather"></table>
+    </div>
+</div>
+
+<!-- scripts for this page -->
+<script src="/emims/static/js/jquery-latest.js"></script>
+<script src="/emims/static/js/bootstrap.min.js"></script>
+<script src="/emims/static/js/jquery-ui-1.10.2.custom.min.js"></script>
+<script src="/emims/static/echarts/echarts.js"></script>
+
+<script src="/emims/static/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/emims/static/js/theme.js"></script>
+<script src="/emims/static/common/apiUrl.js"></script>
+<script src="/emims/static/bootstrap-table/dist/bootstrap-table.min.js"></script>
+<script src="/emims/static/js/bootstrap-table-zh-CN.min.js"></script>
+<script th:src="@{/static/layDate-v5.0.9/laydate/laydate.js}"></script>
+<script th:src="@{/static/layui-v2.4.5/layui/layui.js}"></script>
+<script>
+    layui.use(['element', 'form','table'], function () {
+        var element = layui.element;
+        var form = layui.form;
+        var table=layui.table;
+        form.render();
+        element.init()
+        var cols =
+            [
+                [
+                    {field: 'saveTime', title: '类型'},
+                    {field: 'temperature', title: '数据'},
+                    {field: 'longtitude', title: '经度'},
+                    {field: 'latitude', title: '纬度'},
+                    {field: 'altitude', title: '海拔'},
+                    {field: 'location', title: '位置'},
+                    {field: 'deviceId', title: '设备号'}
+                ]
+            ];
+        var dataTableOptions = {
+            elem: '#dataGather',
+            url: '/emims/getT',
+            toolbar: '#toolbar',
+            method: 'get',
+            request: {
+                pageName: 'page',
+                limitName: 'size'
+            },
+            response: {
+                statusName: 'status', //规定数据状态的字段名称，默认：code
+                statusCode: 200, //规定成功的状态码，默认：0
+                msgName: 'message', //规定状态信息的字段名称，默认：msg
+                countName: 'totalCount', //规定数据总数的字段名称，默认：count
+                dataName: 'data' //规定数据列表的字段名称，默认：data
+            },
+            // contentType: 'application/json',
+            // height: 350,
+            page: true,
+            limit:4,
+            cols: cols,
+            even: true,
+            size: 'sm',
+            done: function (res, curr, count) {
+                //如果是异步请求数据方式，res即为你接口返回的信息。
+                //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                console.log(res);
+
+                //得到当前页码
+                console.log(curr);
+
+                //得到数据总量
+                console.log(count);
+            },
+            text: {
+                none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            }
+        }
+        //表格初始化
+        table.init('dataGather', dataTableOptions);
+    });
+</script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('emims-chart'));
+    // 指定图表的配置项和数据
+    var option = {
+        /*title: {
+            text: '温度(单位:℃)'
+        },*/
+        grid: {
+            left: 0,
+            top: 35,
+            right: 40,
+            bottom: 40,
+            containLabel: true
+        },
+        tooltip: {
+            trigger: 'axis',
+
+            axisPointer: {
+                animation: true
+            }
+        },
+        toolbox: {
+            feature: {
+                dataView: {},
+                saveAsImage: {
+                    pixelRatio: 2
+                },
+                mark: {show: true},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {}
+            }
+        },
+        legend: {
+            data: ['温度', '湿度']
+        },
+        xAxis: {
+            axisLabel: {
+                rotate: 30,
+                interval: 0
+            },
+            axisLine: {
+                lineStyle: {
+                    color: 'gray'
+                }
+            },
+            splitLine: {
+                show: false
+            },
+            type: 'category',
+            boundaryGap: false,
+            data: ['00:00', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30', '00:30']
+        },
+        yAxis: {
+            axisLine: {
+                lineStyle: {
+                    color: 'gray'
+                }
+            },
+            boundaryGap: [0, '100%'],
+            splitLine: {
+                show: false
+            }
+        },
+        dataZoom: [
+            {
+                height: 15,
+                type: 'slider',
+                show: true,
+                xAxisIndex: [0],
+                start: 0,
+                end: 100
+            },
+            {
+                width: 15,
+                type: 'slider',
+                show: true,
+                yAxisIndex: [0],
+                left: '98%',
+                start: 0,
+                end: 100
+            },
+            {
+                type: 'inside',
+                xAxisIndex: [0],
+                start: 1,
+                end: 35
+            },
+            {
+                type: 'inside',
+                yAxisIndex: [0],
+                start: 29,
+                end: 36
+            }
+        ],
+        series: [
+            {
+                color: '#74BFF1',
+                type: 'line',
+                smooth: true,
+                name: '温度',
+                markPoint: {
+                    data: [
+                        {type: 'max', name: '最大值'},
+                        {type: 'min', name: '最小值'}
+                    ]
+                },
+                markLine: {
+                    data: [
+                        {type: 'average', name: '平均值'}
+                    ]
+                },
+                data: [5, 20, 36, 10, 10, -10, 15, -24, 25, 36, 13, 96, 55, 15, 25, 11, 20, 36, 10, 10, 10, 15, 24, 25, 36, 13, 96, 55, 15, 25, 11]
+            },
+            {
+                color: '#A7B5C5',
+                type: 'line',
+                smooth: true,
+                name: '湿度',
+                data: [5, 10, 4, 16, 18, 50, 18, 45, 25, 36, 63, 96, 55, 145, 85, 51]
+            }
+        ],
+
+    };
+
+    //bootstrap datepicker处理
+    /*$('.datepicker').datepicker().on('changeDate', function (ev) {
+        $(this).datepicker('hide');
+    });*/
+    laydate.render({
+        elem: '#stratDate' //指定元素
+    });
+    laydate.render({
+        elem: '#endDate' //指定元素
+    });
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+</body>
+</html>

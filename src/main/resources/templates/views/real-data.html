@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>实时数据</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" th:href="@{/static/layui-v2.4.5/layui/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/admin.css}"/>
+
+    <style type="text/css">
+        .layui-form-switch {
+            margin-top: 0px !important;
+        }
+
+        .frame-stop {
+            animation-play-state: paused;
+            -webkit-animation-play-state: paused;
+        }
+
+        .loading {
+            width: 100%;
+            height: 43px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            /*margin-top:100px;*/
+        }
+
+        .loading span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            margin-right: 5px;
+            border-radius: 50%;
+            background: #009688;
+            -webkit-animation: load 1.04s ease infinite;
+        }
+
+        .loading span:last-child {
+            margin-right: 0px;
+        }
+
+        @-webkit-keyframes load {
+            0% {
+                opacity: 1;
+                -webkit-transform: scale(1.3);
+            }
+            100% {
+                opacity: 0.2;
+                -webkit-transform: scale(.3);
+            }
+        }
+
+        .loading span:nth-child(1) {
+            -webkit-animation-delay: 0.13s;
+        }
+
+        .loading span:nth-child(2) {
+            -webkit-animation-delay: 0.26s;
+        }
+
+        .loading span:nth-child(3) {
+            -webkit-animation-delay: 0.39s;
+        }
+
+        .loading span:nth-child(4) {
+            -webkit-animation-delay: 0.52s;
+        }
+
+        .loading span:nth-child(5) {
+            -webkit-animation-delay: 0.65s;
+        }
+
+        #realDataForm .layui-col-md11 {
+            margin-left: 8%;
+            display: flex;
+        }
+
+        #realDataForm {
+            padding: 0px !important;
+        }
+
+        #realDataForm .layui-col-md11 {
+            margin-left: 0px !important;
+        }
+
+        #realDataForm .layui-col-md11 label {
+            display: block;
+            width: 130px;
+            text-align: center;
+            padding: 5px;
+        }
+
+        #realDataForm .layui-col-md11 input {
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title" id="dataTabs">
+                <li class="layui-this" data-type="temp">温度</li>
+                <li data-type="humi">湿度</li>
+                <li data-type="airP">大气压</li>
+                <li data-type="ultra">紫外线</li>
+                <li data-type="pm">pm2.5</li>
+                <li data-type="illum">光照强度</li>
+            </ul>
+            <div class="layui-tab-content" style="background-color: white">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-row layui-col-space5" style="height: 400px">
+                        <div class="layui-col-md9">
+                            <div id="realDataCharts" style="width: 100%;height: 400px"></div>
+                        </div>
+                        <div class="layui-col-md3">
+                            <div class="layui-card" style="height: 395px;">
+                                <div class="layui-card-header">
+                                    <div class="layui-row">
+                                        <div class="layui-col-md6">
+                                            <form class="layui-form" action="">
+                                                <div class="layui-form-item">
+                                                    <input type="checkbox" checked="checked" name="switch"
+                                                           lay-skin="switch" lay-filter="chartsSwitch" lay-text="停止|开始">
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="layui-col-md6">
+                                            <div class="loading">
+                                                <span id="dot0"></span>
+                                                <span id="dot1"></span>
+                                                <span id="dot2"></span>
+                                                <span id="dot3"></span>
+                                                <span id="dot4"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-card-body layui-row layui-col-space10" id="realDataForm">
+                                    <div class="layui-col-md11">
+                                        <label>类型</label>
+                                        <input type="text" name="time" id="type" value="温度" placeholder="数据类型"
+                                               autocomplete="off" class="layui-input" readonly>
+                                    </div>
+                                    <div class="layui-col-md11">
+                                        <label id="dataValueLable">数据值</label>
+                                        <input type="text" name="dataVal" id="dataVal" placeholder="数据值"
+                                               autocomplete="off"
+                                               class="layui-input" readonly>
+                                    </div>
+                                    <div class="layui-col-md11">
+                                        <label>时间</label>
+                                        <input type="text" name="time" id="time" placeholder="时间" autocomplete="off"
+                                               class="layui-input" readonly>
+                                    </div>
+                                    <div class="layui-col-md11">
+                                        <label>经度</label>
+                                        <input type="text" name="longti" id="longti" placeholder="经度"
+                                               autocomplete="off" class="layui-input" readonly>
+                                    </div>
+                                    <div class="layui-col-md11">
+                                        <label>纬度</label>
+                                        <input type="text" name="alti" id="alti" placeholder="纬度" autocomplete="off"
+                                               class="layui-input" readonly>
+                                    </div>
+                                    <div class="layui-col-md11">
+                                        <label>海拔</label>
+                                        <input type="text" name="lati" id="lati" placeholder="海拔" autocomplete="off"
+                                               class="layui-input tooltip" readonly>
+                                    </div>
+                                    <div class="layui-col-md11">
+                                        <label>位置</label>
+                                        <input type="text" name="loca" id="loca" placeholder="位置"
+                                               value="陕西省咸阳市武功县小村镇西崆峒村三组" autocomplete="off" class="layui-input tooltip"
+                                               readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="layui-tab-item">
+                     <div class="layui-row">
+                         我操了
+                     </div>
+                 </div>
+                 <div class="layui-tab-item">内容3</div>
+                 <div class="layui-tab-item">内容4</div>
+                 <div class="layui-tab-item">内容5</div>-->
+            </div>
+        </div>
+    </div>
+    <div class="layui-row" style="height: 200px;border-top: 1px solid #F2F2F2;">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                当前实时数据
+            </div>
+            <div class="layui-card-body">
+                <table id="realInteData" lay-filter="realInteData"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
+<script th:src="@{/static/js/jquery-latest.js}"></script>
+<script th:src="@{/static/layui-v2.4.5/layui/layui.js}"></script>
+<script type="text/javascript">
+    layui.use(['element', 'form', 'table'], function () {
+        var element = layui.element;
+        var form = layui.form;
+        var layer = layui.layer;
+        var table = layui.table;
+        var currentDataType = 'temp';
+        var cols =
+            [
+                [
+                    {field: 'receiveDate', title: '时间'},
+                    {field: 'temp', title: '温度'},
+                    {field: 'humi', title: '湿度'},
+                    {field: 'airP', title: '大气压'},
+                    {field: 'ultra', title: '紫外线'},
+                    {field: 'illum', title: '光照'},
+                    {field: 'pm', title: 'PM'},
+                    {field: 'longtitude', title: '经度'},
+                    {field: 'altitude', title: '纬度'},
+                ]
+            ];
+        var dataTableOptions = {
+            elem: '#realInteData',
+            cols: cols,
+            even: true,
+            data: [],
+            size: 'sm',
+            done: function (res, curr, count) {
+                //如果是异步请求数据方式，res即为你接口返回的信息。
+                //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                console.log(res);
+
+                //得到当前页码
+                console.log(curr);
+
+                //得到数据总量
+                console.log(count);
+            },
+            text: {
+                none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            }
+        }
+
+        var myChart = echarts.init(document.getElementById('realDataCharts'));
+        var option = {
+            grid: {
+                x: 70,
+                y: 40,
+                x2: 40,
+                y2: 80,
+                borderWidth: 1
+            },
+            animationDurationUpdate: 100,
+            legend: {
+                data: ['温度']
+            },
+            tooltip: {},
+            toolbox: {
+                feature: {
+                    dataView: {},
+                    saveAsImage: {
+                        pixelRatio: 2
+                    },
+                    mark: {show: true},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {}
+                }
+            },
+            xAxis: {
+                axisTick: {
+                    interval: 0,
+                    show: true,
+                    alignWithLabel: true
+                },
+                axisLabel: {
+                    rotate: 30,
+                    interval: 0
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: 'gray'
+                    }
+                },
+                splitLine: {
+                    show: true
+                },
+                boundaryGap: true,
+                name: '时间',
+                type: 'category',
+                triggerEvent: true,
+                data: []
+            },
+            yAxis: {
+                name: '数据类型-温度',
+                type: 'value'
+            },
+            series: [{
+                color: '#74BFF1',
+                type: 'line',
+                smooth: true,
+                name: '温度',
+                markPoint: {
+                    data: [
+                        {type: 'max', name: '最大值'},
+                        {type: 'min', name: '最小值'}
+                    ]
+                },
+                markLine: {
+                    data: [
+                        {type: 'average', name: '平均值'}
+                    ]
+                },
+                data: [],
+            }]
+        };
+        window.refreshCharts = function () {
+            var dateTime = [];
+            var datavalue = [];
+            var dataId = [];
+            var pageinit = 0
+            $.ajax({
+                type: "get",
+                url: "/emims/api/remoteData",
+                dataType: "json",
+                data: {
+                    page: pageinit,
+                    size: 20
+                },
+                success: function (result) {
+                    //请求成功时执行该函数内容，result即为服务器返回的json对象
+                    dateTime = [];
+                    datavalue = [];
+                    dataId = [];
+                    var data = result.data;
+                    var item;
+                    for (let i = data.length - 1; i >= 0; i--) {
+                        item = data[i];
+                        switch (currentDataType) {
+                            case 'temp':
+                                datavalue.push(item.temp)
+                                break;
+                            case 'humi':
+                                datavalue.push(item.humi)
+                                break;
+                            case 'airP':
+                                datavalue.push(item.airP)
+                                break;
+                            case 'ultra':
+                                datavalue.push(item.ultra)
+                                break;
+                            case 'pm':
+                                datavalue.push(item.pm)
+                                break;
+                            case 'illum':
+                                datavalue.push(item.illum)
+                                break;
+                        }
+                        dateTime.push(item.receiveDate + '')
+                        dataId.push(item.dataId)
+                    }
+                    option.xAxis.data = dateTime;
+                    option.series[0].data = datavalue;
+                    myChart.setOption(option, true);
+                    myChart.on('click', function (params) {
+                        if (params.componentType == "xAxis") {
+                            alert("单击了" + params.value + "x轴标签");
+                        } else {
+                            alert("单击了" + params.name + "柱状图");
+                        }
+                    });
+                    myChart.hideLoading();
+                }
+            })
+        }
+        myChart.showLoading({
+            text:'正在加载数据...',
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0.2)'}
+        })
+        refreshCharts();
+
+        window.tableInit = function () {
+            //表格初始化
+            table.init('realInteData', dataTableOptions);
+        }
+
+        form.on('switch(chartsSwitch)', function (data) {
+            var x = data.elem.checked;//判断开关状态
+            for (var i = 0; i < 5; i++) {
+                if (x == false) {
+                    document.getElementById("dot" + i).style = "animation-play-state:paused;-webkit-animation-play-state: paused";
+                } else {
+                    document.getElementById("dot" + i).style = "";
+                }
+            }
+            return false;
+        });
+
+        var socket;
+        if (typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        } else {
+            console.log("您的浏览器支持WebSocket");
+            //实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
+            //等同于socket = new WebSocket("ws://localhost:8083/checkcentersys/websocket/20");
+            socket = new WebSocket("ws://duanhong.top:8090/emims/dataPush/duanhong");
+            //打开事件
+            socket.onopen = function () {
+                layer.msg("数据传输已打开")
+            };
+            //获得消息事件
+            socket.onmessage = function (msg) {
+                var remoteData = msg.data;
+                if (remoteData != null && remoteData != '') {
+                    var data = JSON.parse(remoteData);
+                    $("#time").val(data.receiveDate);
+                    $("#longti").val(data.longtitude);
+                    $("#alti").val(data.altitude);
+                    $("#lati").val(data.latitude);
+                    switch (currentDataType) {
+                        case 'temp':
+                            $("#dataVal").val(data.temp);
+                            break;
+                        case 'humi':
+                            $("#dataVal").val(data.humi);
+                            break;
+                        case 'airP':
+                            $("#dataVal").val(data.airP);
+                            break;
+                        case 'ultra':
+                            $("#dataVal").val(data.ultra);
+                            break;
+                        case 'illum':
+                            $("#dataVal").val(data.illum);
+                            break;
+                        case 'pm':
+                            $("#dataVal").val(data.pm);
+                            break;
+                    }
+                    form.render();
+                    dataTableOptions.data=[];
+                    refreshCharts();
+                    dataTableOptions.data.push(JSON.parse(remoteData));
+                    tableInit()
+                }
+            };
+            //关闭事件
+            socket.onclose = function () {
+                layer.msg("Socket已关闭")
+            };
+            //发生了错误事件
+            socket.onerror = function () {
+                layer.msg("Socket发生了错误")
+                //此时可以尝试刷新页面
+            }
+            //离开页面时，关闭socket
+            //jquery1.8中已经被废弃，3.0中已经移除
+            // $(window).unload(function(){
+            //     socket.close();
+            //});
+        }
+
+        $("#loca").hover(function (e) {
+            layer.tips("<span style='color:white'>" + e.currentTarget.attributes.value.value + "</span>", $("#loca"), {tips: [3, '#5FB878']});
+        }, function () {
+        });
+        //标签点击事件
+        $("#dataTabs li").click(function (e) {
+            var chart = {
+                color: '#74BFF1',
+                type: 'line',
+                smooth: true,
+                name: '温度',
+                markPoint: {
+                    data: [
+                        {type: 'max', name: '最大值'},
+                        {type: 'min', name: '最小值'}
+                    ]
+                },
+                markLine: {
+                    data: [
+                        {type: 'average', name: '平均值'}
+                    ]
+                },
+                data: [],
+            }
+            var dataType = e.target.dataset.type;
+            var typeValue;
+            currentDataType = dataType;
+            option.legend.data = [];
+            switch (dataType) {
+                case 'temp':
+                    option.yAxis.name = '数据类型-温度';
+                    option.legend.data.push("温度");
+                    typeValue = "温度";
+                    break;
+                case 'humi':
+                    option.yAxis.name = '数据类型-湿度';
+                    chart.color = '#009688';
+                    chart.name = "湿度";
+                    typeValue = "湿度";
+                    option.legend.data.push("湿度")
+                    break;
+                case 'airP':
+                    option.yAxis.name = '数据类型-大气压';
+                    chart.color = "#49A7EC";
+                    chart.name = "大气压";
+                    typeValue = "大气压";
+                    option.legend.data.push("大气压")
+                    break;
+                case 'ultra':
+                    option.yAxis.name = '数据类型-紫外线';
+                    chart.color = "#FC7E52";
+                    chart.name = "紫外线";
+                    typeValue = "紫外线"
+                    option.legend.data.push("紫外线")
+                    break;
+                case 'pm':
+                    option.yAxis.name = '数据类型-pm2.5';
+                    chart.color = "#A3A6B9";
+                    chart.name = "pm2.5";
+                    typeValue = "pm2.5"
+                    option.legend.data.push("pm2.5")
+                    break;
+                case 'illum':
+                    option.yAxis.name = '数据类型-光照强度';
+                    chart.color = "#E7B111";
+                    chart.name = "光照强度";
+                    typeValue = "光照强度"
+                    option.legend.data.push("光照强度")
+                    break;
+            }
+            $("#type").val(typeValue)
+            $("#dataValueLable").text(typeValue + "值")
+            option.series[0] = chart;
+            console.log(chart)
+            refreshCharts();
+        })
+
+    });
+    $.ajax({
+        async: "false",
+        url: "http://api.map.baidu.com/geocoder",
+        type: "GET",
+        dataType: "jsonp",
+        data: {
+            location: '23.1200491,113.30764968',
+            output: "json",
+            ak: "15yvAhDLo0jUZqla4GQQTwAg2Gp176ux",
+            callback: 'showLocation'
+        },
+        success: function (data) {
+        },
+        error: function (data) {
+            console.log(data)
+        }
+    });
+
+    function showLocation(data) {
+        console.log(data)
+    }
+</script>
+
+<script>
+
+</script>
+</body>
+</html>

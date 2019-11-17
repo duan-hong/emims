@@ -1,0 +1,151 @@
+<html>
+<head>
+	<title>新用户</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- bootstrap -->
+    <link href="/emims/static/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="/emims/static/css/bootstrap/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="/emims/static/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/emims/static/common/css/commonStyle.css"/>
+
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/elements.css" />
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/icons.css" />
+
+    <!-- libraries -->
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/lib/font-awesome.css" />
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="/emims/static/css/compiled/new-user.css" type="text/css" media="screen" />
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+<body style="background-color: white" class="inner-container">
+	<!-- main container -->
+        <div class="container-fluid">
+            <div id="pad-wrapper" class="new-user">
+                <div class="row-fluid header">
+                    <h3>创建用户</h3>
+                </div>
+
+                <div class="row-fluid form-wrapper">
+                    <!-- left column -->
+                    <div class="span9 with-sidebar">
+                        <div class="container">
+                            <form class="new_user_form inline-input" />
+                                <div class="span12 field-box">
+                                    <label>用户名:</label>
+                                    <input class="span9" type="text" />
+                                </div>
+                                <div class="span12 field-box">
+                                    <label>省:</label>
+                                    <div class="ui-select span5">
+                                        <select>
+                                            <option value="AK" />陕西
+                                            <option value="HI" />北京
+                                            <option value="CA" />山东
+                                            <option value="NV" />南京
+                                            <option value="OR" />辽宁
+                                            <option value="WA" />新疆
+                                            <option value="AZ" />青海
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="span12 field-box">
+                                    <label>单位:</label>
+                                    <input class="span9" type="text" />
+                                </div>
+                                <div class="span12 field-box">
+                                    <label>Email:</label>
+                                    <input class="span9" type="text" />
+                                </div>
+                                <div class="span12 field-box">
+                                    <label>电话:</label>
+                                    <input class="span9" type="text" />
+                                </div>
+                                <div class="span12 field-box">
+                                    <label>网址:</label>
+                                    <input class="span9" type="text" />
+                                </div>
+                                <div class="span12 field-box">
+                                    <label>住址:</label>
+                                    <div class="address-fields">
+                                        <input class="span12" type="text" placeholder="街道住址" />
+                                        <input class="span12 small" type="text" placeholder="国家" />
+                                        <input class="span12 small" type="text" placeholder="省" />
+                                        <input class="span12 small last" type="text" placeholder="邮编" />
+                                    </div>
+                                </div>
+                                <div class="span12 field-box textarea">
+                                    <label>备注:</label>
+                                    <textarea class="span9"></textarea>
+                                    <span class="charactersleft">介绍一下自己吧</span>
+                                </div>
+                                <div class="span11 field-box actions">
+                                    <input type="button" class="btn-glow primary" value="创建" />
+                                    <span>或者</span>
+                                    <input type="reset" value="重置" class="reset" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- side right column -->
+                    <div class="span3 form-sidebar pull-right">
+                        <div class="btn-group toggle-inputs hidden-tablet">
+                            <button class="glow left active" data-input="inline">线条输入</button>
+                            <button class="glow right" data-input="normal">正常输入</button>
+                        </div>
+                        <div class="alert alert-info hidden-tablet">
+                            <i class="icon-lightbulb pull-left"></i>
+                            以上可选择不同的输入表单
+                        </div>
+                        <h6>创建多用户</h6>
+                        <p>立刻添加多个用户</p>
+                        <p>可以通过以下模板进行导入</p>
+                        <ul>
+                            <li><a href="#">上传vCard文件</a></li>
+                            <li><a href="#">从CSV文件导入</a></li>
+                            <li><a href="#">从Excel文件导入</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- end main container -->
+
+
+	<!-- scripts -->
+    <script src="/emims/static/js/jquery-latest.js"></script>
+    <script src="/emims/static/js/bootstrap.min.js"></script>
+    <script src="/emims/static/js/theme.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+
+            // toggle form between inline and normal inputs
+            var $buttons = $(".toggle-inputs button");
+            var $form = $("form.new_user_form");
+
+            $buttons.click(function () {
+                var mode = $(this).data("input");
+                $buttons.removeClass("active");
+                $(this).addClass("active");
+
+                if (mode === "inline") {
+                    $form.addClass("inline-input");
+                } else {
+                    $form.removeClass("inline-input");
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

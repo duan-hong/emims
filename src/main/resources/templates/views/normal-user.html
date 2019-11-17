@@ -1,0 +1,212 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>用户管理-列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!-- bootstrap -->
+    <link href="/emims/static/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="/emims/static/css/bootstrap/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="/emims/static/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="/emims/static/common/css/commonStyle.css"/>
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/elements.css" />
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/icons.css" />
+
+    <!-- libraries -->
+    <link href="/emims/static/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="/emims/static/css/compiled/user-list.css" type="text/css" media="screen" />
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+        .td-text{
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 150px;
+        }
+
+        .table thead th{
+            margin-bottom: 0px;
+        }
+    </style>
+</head>
+<body style="background-color: white" class="inner-container">
+	<!-- main container -->
+        <div class="container-fluid">
+            <div id="pad-wrapper" class="users-list">
+                <div class="row-fluid header">
+                    <h3>用户列表</h3>
+                    <div class="span10 pull-right">
+                        <input type="text" class="span5 search" placeholder="用户名" />
+
+                        <!-- custom popup filter -->
+                        <!-- styles are located in css/elements.css -->
+                        <!-- script that enables this dropdown is located in js/theme.js -->
+                        <div class="ui-dropdown">
+                            <div class="head" data-toggle="tooltip" title="点击!">
+                                过滤器
+                                <i class="arrow-down"></i>
+                            </div>
+                            <div class="dialog">
+                                <div class="pointer">
+                                    <div class="arrow"></div>
+                                    <div class="arrow_border"></div>
+                                </div>
+                                <div class="body">
+                                    <p class="title">
+                                        按条件查询
+                                    </p>
+                                    <div class="form">
+                                        <select>
+                                            <option />用户名
+                                            <option />邮箱
+                                        </select>
+                                        <select>
+                                            <option />相等于
+                                            <option />不相等于
+                                            <option />以什么开始
+                                            <option />以什么结束
+                                            <option />包含什么
+                                        </select>
+                                        <input type="text" placeholder="关键字" style="padding: 13px"/>
+                                        <a class="btn-flat small">确认查找</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="new-user.html" class="btn-flat success pull-right">
+                            <span>&#43;</span>
+                            添加用户
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Users table -->
+                <div class="row-fluid table">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="span1-5 sortable">
+                                    用户名
+                                </th>
+                                <th class="span1 sortable">
+                                    <span class="line"></span>权限
+                                </th>
+                                <th class="sortable">
+                                    <span class="line"></span>角色
+                                </th>
+                                <th class="sortable">
+                                    <span class="line"></span>注册时间
+                                </th>
+                                <th class="sortable">
+                                    <span class="line"></span>电话
+                                </th>
+                                <th class="sortable">
+                                    <span class="line"></span>住址
+                                </th>
+                                <th class="sortable">
+                                    <span class="line"></span>备注
+                                </th>
+                                <th class="sortable align-right">
+                                    <span class="line"></span>邮箱
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <!-- row -->
+                        <tr class="first">
+                            <td>
+                                <img src="/emims/static/img/duanhong.png" class="img-circle avatar hidden-phone" />
+                                <a href="user-profile.html" class="name">张前超</a>
+                                <span class="subtext">java工程师</span>
+                            </td>
+                            <td>
+                                ADMIN,ROOT
+                            </td>
+                            <td>
+                                超级管理员
+                            </td>
+                            <td>
+                                2019-4-12
+                            </td>
+                            <td>
+                                17686486497
+                            </td>
+                            <td>
+                                广东省 天河区柯木塱
+                            </td>
+                            <td>
+                                <label class="td-text">
+                                    Java是最好的语言
+                                </label>
+                            </td>
+                            <td class="align-right">
+                                <a href="#">980528586@QQ.com</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <img th:src="@{/static/img/kitty.gif}" class="img-circle avatar hidden-phone" />
+                                <a href="user-profile.html" class="name">HelloKity</a>
+                                <span class="subtext">高级注册会计师</span>
+                            </td>
+                            <td>
+                                ADMIN,ROOT
+                            </td>
+                            <td>
+                                超级管理员
+                            </td>
+                            <td>
+                                2019-4-12
+                            </td>
+                            <td>
+                                17686486497
+                            </td>
+                            <td>
+                                广东省 天河区柯木塱
+                            </td>
+                            <td>
+                                <label class="td-text">
+                                    企业的经营管理之道，托付给灵巧的手，在算盘上运筹。
+                                </label>
+                            </td>
+                            <td class="align-right">
+                                <a href="#">980528586@QQ.com</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination pull-right">
+                    <ul>
+                        <li><a href="#">&#8249;</a></li>
+                        <li><a class="active" href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li><a href="#">&#8250;</a></li>
+                    </ul>
+                </div>
+                <!-- end users table -->
+            </div>
+        </div>
+    <!-- end main container -->
+
+
+	<!-- scripts -->
+    <script src="/emims/static/js/jquery-latest.js"></script>
+    <script src="/emims/static/js/bootstrap.min.js"></script>
+    <script src="/emims/static/js/theme.js"></script>
+
+</body>
+</html>

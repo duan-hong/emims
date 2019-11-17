@@ -1,0 +1,125 @@
+<html>
+<html>
+<head>
+	<title>个人信息</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	
+    <!-- bootstrap -->
+    <link href="/emims/static/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="/emims/static/css/bootstrap/bootstrap-responsive.css" rel="stylesheet" />
+    <link href="/emims/static/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/elements.css" />
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/icons.css" />
+
+    <link rel="stylesheet" type="text/css" href="/emims/static/common/css/commonStyle.css"/>
+
+    <!-- libraries -->
+    <link rel="stylesheet" type="text/css" href="/emims/static/css/lib/font-awesome.css" />
+    
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="/emims/static/css/compiled/personal-info.css" type="text/css" media="screen" />
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+<body class="inner-container">
+	<!-- main container .wide-content is used for this layout without sidebar :)  -->
+    <div class="content wide-content">
+        <div class="container-fluid">
+            <div class="settings-wrapper" id="pad-wrapper">
+                <!-- avatar column -->
+                <div class="span3 avatar-box">
+                    <div class="personal-image">
+                        <img src="/emims/static/img/personal.png" class="avatar img-circle" style="width: 113px;height: 113px"/>
+                        <p>更换头像</p>
+                        
+                        <input type="file" />
+                    </div>
+                </div>
+
+                <!-- edit form column -->
+                <div class="span7 personal-info">
+                    <div class="alert alert-info">
+                        <i class="icon-lightbulb"></i>
+                        这里可以修改或者完善您的个人信息
+                        <br />请<strong>认真填写</strong>
+                    </div>
+                    <h5 class="personal-title" style="font-style: normal">个人信息</h5>
+
+                    <form />
+                        <div class="field-box">
+                            <label>姓:</label>
+                            <input class="span5 inline-input" type="text" value="张" />
+                        </div>
+                        <div class="field-box">
+                            <label>名:</label>
+                            <input class="span5 inline-input" type="text" value="前超" />
+                        </div>
+                        <div class="field-box">
+                            <label>单位:</label>
+                            <input class="span5 inline-input" type="text" value="华为" />
+                        </div>
+                        <div class="field-box">
+                            <label>电话:</label>
+                            <input class="span5 inline-input" type="tel" value="17686486497" />
+                        </div>
+                        <div class="field-box">
+                            <label>邮箱地址:</label>
+                            <input class="span5 inline-input" type="email" value="980528586@qq.com" />
+                        </div>
+                        <!--<div class="field-box">
+                            <label>Time Zone:</label>
+                            <div class="ui-select">
+                                <select id="user_time_zone" name="user[time_zone]">
+                                    <option value="Hawaii" />(GMT-10:00) Hawaii
+                                    <option value="Alaska" />(GMT-09:00) Alaska
+                                    <option value="Pacific Time (US &amp; Canada)" />(GMT-08:00) Pacific Time (US &amp; Canada)
+                                    <option value="Arizona" />(GMT-07:00) Arizona
+                                    <option value="Mountain Time (US &amp; Canada)" />(GMT-07:00) Mountain Time (US &amp; Canada)
+                                    <option value="Central Time (US &amp; Canada)" selected="selected" />(GMT-06:00) Central Time (US &amp; Canada)
+                                    <option value="Eastern Time (US &amp; Canada)" />(GMT-05:00) Eastern Time (US &amp; Canada)
+                                    <option value="Indiana (East)" />(GMT-05:00) Indiana (East)                                    
+                                </select>
+                            </div>
+                        </div>-->
+                        <div class="field-box">
+                            <label>用户名:</label>
+                            <input class="span5 inline-input" type="text" value="断鸿" />
+                        </div>
+                        <div class="field-box">
+                            <label>密码:</label>
+                            <input class="span5 inline-input" type="password" value="zqc19941002" />
+                        </div>
+                        <div class="field-box">
+                            <label>确认密码:</label>
+                            <input class="span5 inline-input" type="password" value="zqc19941002" />
+                        </div>
+                        <div class="field-box" style="position: relative;">
+                            <label>验证码:</label>
+                            <input class="span5 inline-input" type="password" value="" />
+                            <a style="position: absolute;top: 0px;right: 30px;">发送验证码</a>
+                        </div>
+                        <div class="span6 field-box actions">
+                            <input type="button" class="btn-glow primary" value="保存信息" />
+                            <span>或者</span>
+                            <input type="reset" value="重置" class="reset" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end main container -->
+
+
+	<!-- scripts -->
+    <script src="/emims/static/js/jquery-latest.js"></script>
+    <script src="/emims/static/js/bootstrap.min.js"></script>
+    <script src="/emims/static/js/theme.js"></script>
+
+</body>
+</html>
