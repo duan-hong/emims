@@ -103,7 +103,7 @@
             <version>1.4.2.RELEASE</version>
         </dependency>
 
-        <!--4、发送邮件-->
+        <!--&lt;!&ndash;4、发送邮件&ndash;&gt;
         <dependency>
             <groupId>top.duanhong</groupId>
             <artifactId>dsn</artifactId>
@@ -133,7 +133,7 @@
             <groupId>top.duanhong</groupId>
             <artifactId>smtp</artifactId>
             <version>1.0.0</version>
-        </dependency>
+        </dependency>-->
 
         <!--5.加入缓存-->
         <!--如果在classpath下存在redis并且redis已经配置好了，就会默认使用RedisCacheManager作为缓存提供者-->

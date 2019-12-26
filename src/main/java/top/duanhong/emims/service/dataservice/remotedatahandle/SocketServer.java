@@ -1,5 +1,6 @@
 package top.duanhong.emims.service.dataservice.remotedatahandle;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import top.duanhong.emims.pojo.tools.LogFactory;
 
@@ -39,7 +40,7 @@ public class SocketServer{
     private static Selector selector;
 
     /**
-     * 启动socket服务，开启监听
+     * 启动socket服务，开启监听,绑定端口
      *
      * @throws IOException
      */
@@ -91,7 +92,12 @@ public class SocketServer{
                 remoteDataStr = String.valueOf(cs.decode(rBuffer).array());
             }
             log.info("远程数据"+remoteDataStr);
-            RemoteDataHandleService.acceptRemotata(remoteDataStr);
+            if (StringUtils.isNotBlank(remoteDataStr)){
+                //处理数据
+                RemoteDataHandleService.acceptRemoteData(remoteDataStr);
+            }else {
+                log.info("接收的数据为空");
+            }
             sBuffer = ByteBuffer.allocate(remoteDataStr.getBytes("UTF-8").length);
             sBuffer.put(remoteDataStr.getBytes("UTF-8"));
             sBuffer.flip();

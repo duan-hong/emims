@@ -1,3 +1,4 @@
+/*
 package top.duanhong.emims.pojo.tools;
 
 import org.springframework.stereotype.Component;
@@ -12,10 +13,12 @@ import java.util.Properties;
 
 @Component
 public class MailDeal {
-    /*
+    */
+/*
             odeizmbrhatbbbce
     jkfqiyclrcjxbfjf
-            kqoiaxjccsnsbbcf*/
+            kqoiaxjccsnsbbcf*//*
+
     public static final String SMTPSERVER = "smtp.qq.com";
     public static final String SMTPPORT = "465";
     public static final String ACCOUT = "980528586@qq.com";
@@ -83,3 +86,4 @@ public class MailDeal {
         return msg;
     }
 }
+*/

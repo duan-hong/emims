@@ -1,3 +1,4 @@
+/*
 package top.duanhong.emims.controller.rest.systemcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,12 @@ import top.duanhong.emims.service.userservice.YzmService;
 
 import javax.servlet.http.HttpSession;
 
+*/
 /**
  * 验证码处理
  * @author Administrator
- */
+ *//*
+
 @Controller
 @RequestMapping("sysAdmin")
 public class YzmController {
@@ -28,3 +31,4 @@ public class YzmController {
         return result;
     }
 }
+*/

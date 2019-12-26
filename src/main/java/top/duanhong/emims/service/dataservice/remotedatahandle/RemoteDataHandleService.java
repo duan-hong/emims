@@ -13,7 +13,7 @@ public class RemoteDataHandleService {
 
     private static RemoteDataService remoteDataService=SpringUtil.getBean(RemoteDataService.class);
 
-    public static void acceptRemotata(String dataStr){
+    public static void acceptRemoteData(String dataStr){
         if (dataStr!=null&&!"".equals(dataStr)){
             RemoteDataModel remoteDataModel=JsonUtil.fromJsonStr(dataStr);
             if (remoteDataModel!=null){
