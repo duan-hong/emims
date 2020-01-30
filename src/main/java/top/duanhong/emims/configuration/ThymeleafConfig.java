@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 @ConfigurationProperties(prefix = "spring.thymeleaf")
 public class ThymeleafConfig {
     private static final Charset DEFAULT_ENCODING= StandardCharsets.UTF_8;
-    private static final String DEFAULT_PREFIX="classpath:/templates/";
+    private static final String DEFAULT_PREFIX="classpath:/templates/views/";
     private static final String DEFAULT_SUFFIX=".html";
 
 }

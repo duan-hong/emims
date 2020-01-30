@@ -40,8 +40,8 @@ public class EmimsMonitorDataController {
         bootatrap-table 向后端传递page和pagesize来分页查询。
         */
         //创建时间降序排序
-        Sort sort = new Sort(Sort.Direction.DESC,"saveTime");
-        Pageable pageable = PageRequest.of(page-1,size,sort);
+//        Sort sort = new Sort(Sort.Direction.DESC,"saveTime");
+        Pageable pageable = PageRequest.of(page-1,size);
         Page<Temp> result = tempService.getT(pageable);
         if (result!=null){
             if (result.getSize()>0){

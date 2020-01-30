@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import top.duanhong.emims.controller.utils.ResponseFactory;
 import top.duanhong.emims.pojo.dto.response.BaseResponse;
+import top.duanhong.emims.pojo.dto.response.MethodExecuteResult;
 import top.duanhong.emims.pojo.po.Menu;
 import top.duanhong.emims.service.systemservice.MenuService;
 
@@ -65,7 +66,7 @@ public class MenuController {
 
     @GetMapping("/node")
     public ResponseEntity getAllNode(){
-        BaseResponse baseResponse=menuService.getAllNode();
-        return new ResponseEntity(ResponseFactory.getBaseResponse(baseResponse.getMessage(),baseResponse.getData()),(Boolean)baseResponse.getExtra()?HttpStatus.OK:HttpStatus.BAD_REQUEST);
+        MethodExecuteResult result =menuService.getAllNode();
+        return new ResponseEntity(ResponseFactory.getBaseResponse(result.getMessage(),result.getData()),result.isSuccess()?HttpStatus.OK:HttpStatus.BAD_REQUEST);
     }
 }

@@ -30,7 +30,7 @@ public class RemoteDataController {
     @ApiOperation(value = "远程数据",notes = "获取远程数据")
     @GetMapping
     public ResponseEntity getRemoteData(int page,int size){
-        Pageable pageable= PageRequest.of(page,size,new Sort(Sort.Direction.DESC, "receiveDate"));
+        Pageable pageable= PageRequest.of(page,size);//new Sort(Sort.Direction.DESC, "receiveDate"
         Page remoteDataResult=remoteDataService.getRemoteData(pageable);
         if (remoteDataResult!=null){
             if (remoteDataResult.getSize()>0){

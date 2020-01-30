@@ -1,0 +1,111 @@
+{
+  "clearInfo": {
+    "clearUrl": "api/clear.json"
+  },
+  "homeInfo": {
+    "title": "首页",
+    "icon": "fa fa-home",
+    "href": ""
+  },
+  "logoInfo": {
+    "title": "Stm32环境检测",
+    "image": "http://img.duanhong.top/emims-logo.png",
+    "href": "/emims"
+  },
+  "menuInfo": {
+    "component": {
+      "title": "基础信息",
+      "icon": "fa fa-lemon-o",
+      "child": [
+        {
+          "title": "实时数据",
+          "href": "real-data",
+          "icon": "fa fa-dot-circle-o",
+          "target": "_self"
+        },
+        {
+          "title": "数据图表",
+          "href": "page/icon-picker.html",
+          "icon": "fa fa-adn",
+          "target": "_self"
+        },
+        {
+          "title": "设备管理",
+          "href": "equip-manage",
+          "icon": "fa fa-dashboard",
+          "target": "_self"
+        },
+        {
+          "title": "告警管理",
+          "href": "alarm-manage",
+          "icon": "fa fa-dashboard",
+          "target": "_self",
+          "child": [
+            {
+              "title": "告警信息查询",
+              "href": "alarm-manage",
+              "icon": "fa fa-dashboard",
+              "target": "_self"
+            },
+            {
+              "title": "告警参数设置",
+              "href": "alarm-settings",
+              "icon": "fa fa-dashboard",
+              "target": "_self"
+            }
+          ]
+        }
+      ]
+    },
+    "other": {
+      "title": "系统管理",
+      "icon": "fa fa-slideshare",
+      "child": [
+        {
+          "title": "用户管理",
+          "href": "",
+          "icon": "fa fa-meetup",
+          "target": "",
+          "child": [
+            {
+              "title": "账号信息",
+              "href": "page/button.html",
+              "icon": "fa fa-calendar",
+              "target": "_self"
+            },
+            {
+              "title": "创建新账号",
+              "href": "page/button.html",
+              "icon": "fa fa-calendar",
+              "target": "_self"
+            },
+            {
+              "title": "账号设置",
+              "href": "page/button.html",
+              "icon": "fa fa-calendar",
+              "target": "_self"
+            }
+          ]
+        },
+        {
+          "title": "角色管理",
+          "href": "page/error.html",
+          "icon": "fa fa-superpowers",
+          "target": "_self"
+        },
+        {
+          "title": "菜单管理",
+          "href": "menuManage",
+          "icon": "fa fa-superpowers",
+          "target": "_self"
+        },
+        {
+          "title": "系统设置",
+          "href": "page/error.html",
+          "icon": "fa fa-superpowers",
+          "target": "_self"
+        }
+      ]
+    }
+  }
+}

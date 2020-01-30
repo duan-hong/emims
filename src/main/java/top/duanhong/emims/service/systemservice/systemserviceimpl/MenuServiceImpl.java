@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import top.duanhong.emims.dao.systemdao.MenuRepository;
 import top.duanhong.emims.pojo.dto.response.BaseResponse;
+import top.duanhong.emims.pojo.dto.response.MethodExecuteResult;
 import top.duanhong.emims.pojo.dto.system.Node;
 import top.duanhong.emims.pojo.po.Menu;
 import top.duanhong.emims.service.systemservice.MenuService;
@@ -79,10 +80,11 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public BaseResponse getAllNode() {
-        List<Menu> menuList=menuRepository.findAll();
+    public MethodExecuteResult getAllNode() {
         List<Node> nodeList =new ArrayList<>();
-        BaseResponse baseResponse=new BaseResponse();
+        MethodExecuteResult result=new MethodExecuteResult();
+        List<Menu> menuList=menuRepository.findAll();
+//        BaseResponse baseResponse=new BaseResponse();
         for (Menu menu: menuList) {
             Node node=new Node();
             node.setId(menu.getId());
@@ -93,14 +95,16 @@ public class MenuServiceImpl implements MenuService {
         }
         List<Node> list=TreeUtil.toTree(nodeList);
         if(list!=null&&list.size()>0){
-            baseResponse.setData(list);
-            baseResponse.setMessage("获取节点成功");
-            baseResponse.setExtra(true);
-        }else {
-            baseResponse.setMessage("获取节点失败");
-            baseResponse.setExtra(false);
+            result.setData(list);
+            result.setMessage("获取节点成功");
+        }else if(list==null) {
+            result.setMessage("获取节点失败");
+            result.setSuccess(false);
+        }else if (list.size()==0){
+            result.setMessage("暂无节点数据");
+            result.setSuccess(false);
         }
-        return baseResponse;
+        return result;
     }
 
     @Override

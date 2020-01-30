@@ -10,7 +10,7 @@ public class BrowserPropertise {
      * 默认登录页面
      */
     private String loginPage = "/index.html";
-    private String errorPage="/error.html";
+    private String errorPage="/404.html";
 
     /**
      * 默认登录方式

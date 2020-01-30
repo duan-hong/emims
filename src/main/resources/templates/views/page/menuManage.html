@@ -1,0 +1,338 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>菜单管理</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/layui_admin/lib/layui-v2.5.4/css/layui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/admin.css}"/>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space5">
+        <div class="layui-col-md2">
+            <div class="layui-row">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        菜单展示
+                    </div>
+                    <div class="layui-card-body">
+                        <ul id="menuTree"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md10">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    子节点列表
+                </div>
+                <div class="layui-card-body">
+                    <table id="menuTable" lay-filter="menuTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{/static/js/jquery-latest.js}"></script>
+<script th:src="@{/layui_admin/lib/layui-v2.5.4/layui.js}"></script>
+<script>
+    layui.use(['element', 'tree', 'table', 'layer', 'form'], function () {
+        var element = layui.element;
+        var tree = layui.tree;
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        var formText=new Array();
+        formText[0]="<div class=\"layui-row\" style=\"padding: 5px;display: none\" id=\"addMenuForm\">\n" +
+            "    <form class=\"layui-form\" action=\"\" style='padding: 20px;'>\n" +
+            "        <div class=\"layui-col-md6\">\n" +
+            "            <div class=\"layui-form-item\">\n" +
+            "                <label class=\"layui-form-label\">菜单名称</label>\n" +
+            "                <div class=\"layui-input-inline\">\n" +
+            "                    <input type=\"text\" name=\"name\" id=\"name\" required lay-verify=\"required\" placeholder=\"请输入名称\"\n" +
+            "                           autocomplete=\"off\" class=\"layui-input\">\n" +
+            "                </div>\n" +
+            "            </div>\n" +
+            "            <div class=\"layui-form-item\">\n" +
+            "                <label class=\"layui-form-label\">菜单链接</label>\n" +
+            "                <div class=\"layui-input-inline\">\n" +
+            "                    <input type=\"text\" name=\"url\" id=\"url\" required lay-verify=\"required\" placeholder=\"请输入链接\"\n" +
+            "                           autocomplete=\"off\" class=\"layui-input\">\n" +
+            "                </div>\n" +
+            "            </div>\n" +
+            "            <div class=\"layui-form-item\">\n" +
+            "                <label class=\"layui-form-label\">序号</label>\n" +
+            "                <div class=\"layui-input-inline\">\n" +
+            "                    <input type=\"text\" name=\"order\" id=\"url\" required lay-verify=\"required\" placeholder=\"请输入序号\"\n" +
+            "                           autocomplete=\"off\" class=\"layui-input\">\n" +
+            "                </div>\n" +
+            "            </div>\n" +
+            "        </div>\n" +
+            "        <div class=\"layui-col-md6\">\n" +
+            "            <div class=\"layui-form-item\">\n" +
+            "                <label class=\"layui-form-label\">父节点</label>\n" +
+            "                <div class=\"layui-input-inline\">\n" +
+            "                    <select name=\"city\" lay-verify=\"required\" id=\"parentNodes\">";
+        formText[2]="</select>\n" +
+            "                </div>\n" +
+            "            </div>\n" +
+            "            <div class=\"layui-form-item\">\n" +
+            "                <label class=\"layui-form-label\">访问角色</label>\n" +
+            "                <div class=\"layui-input-inline\">\n" +
+            "                    <input type=\"text\" name=\"nodeName\" required lay-verify=\"required\" placeholder=\"请输入名称\"\n" +
+            "                           autocomplete=\"off\" class=\"layui-input\">\n" +
+            "                </div>\n" +
+            "            </div>\n" +
+            "            <div class=\"layui-form-item\">\n" +
+            "                <label class=\"layui-form-label\">权限</label>\n" +
+            "                <div class=\"layui-input-inline\">\n" +
+            "                    <input type=\"text\" name=\"url\" required lay-verify=\"required\" placeholder=\"请输入链接\" autocomplete=\"off\"\n" +
+            "                           class=\"layui-input\">\n" +
+            "                </div>\n" +
+            "            </div>\n" +
+            "        </div>\n" +
+            "    </form>\n" +
+            "</div>";
+
+
+        var li=document.createElement('li');
+        li.innerHTML="<div class=\"mui-slider-right\">\n" +
+            " <a class=\"mui-btn mui-btn-green mui-icon mui-icon-compose\"></a>\n" +
+            "<a class=\"mui-btn mui-btn-red mui-icon mui-icon-trash\"></a>\n" +
+            "</div>\n" +
+            "<div class=\"mui-slider-handle\">\n" +
+            "<div class=\"mui-table\">\n" +
+            "<div class=\"mui-table-cell mui-col-xs-11 goods-table-cell\">\n" +
+            "<h4 class=\"mui-ellipsis\" id=\"goodsName\">胡萝卜</h4>\n" +
+            "<h5 id=\"goodsType\">种类：蔬菜</h5>\n" +
+            "<p class=\"mui-h6 mui-ellipsis\" id=\"totalPrice\">共计：13元</p>\n" +
+            "</div>\n" +
+            "<div class=\"mui-table-cell mui-col-xs-1 mui-text-right\">\n" +
+            "<span class=\"mui-h5\" id=\"createTime\">12:25</span>\n" +
+            "</div>\n" +
+            "</div>\n" +
+            "</div>"
+        // var $ =layui.$;
+        var menuTableCols =
+            [
+                [
+                    {checkbox: true},
+                    {field: 'id', sort: true, title: 'ID'},
+                    {field: 'nodeName', title: '节点名'},
+                    {field: 'parentId', title: '父节点'},
+                    {field: 'url', title: '链接'},
+                    {field: 'role', title: '访问角色'},
+                    {field: 'auth', title: '权限'},
+                    {field: 'order', title: '排序'},
+                    {field: 'icon', title: '图标'},
+                    {fixed: 'right', title: '操作', align: 'center', toolbar: '#menuTblToolBar'}
+                ]
+            ];
+        var treeOptions = {
+            elem: '#menuTree' //传入元素选择器
+            , nodes: [],
+            click: function (node) {
+                alert(node.name) //node即为当前点击的节点数据
+            }
+        }
+        //表格参数
+        var menuTableOptions = {
+            elem: '#menuTable',
+            url: '/emims/api/menu',
+            toolbar: '#toolbar',
+            method: 'get',
+            request: {
+                pageName: 'page',
+                limitName: 'size'
+            },
+            response: {
+                statusName: 'status', //规定数据状态的字段名称，默认：code
+                statusCode: 200, //规定成功的状态码，默认：0
+                msgName: 'message', //规定状态信息的字段名称，默认：msg
+                countName: 'totalCount', //规定数据总数的字段名称，默认：count
+                dataName: 'data' //规定数据列表的字段名称，默认：data
+            },
+            // contentType: 'application/json',
+            // height: 350,
+            page: true,
+            limit:15,
+            cols: menuTableCols,
+            even: true,
+            size: 'sm',
+            done: function (res, curr, count) {
+                //如果是异步请求数据方式，res即为你接口返回的信息。
+                //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                console.log(res);
+
+                //得到当前页码
+                console.log(curr);
+
+                //得到数据总量
+                console.log(count);
+            },
+            text: {
+                none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            }
+        }
+        //表格事件监听
+        table.on('tool(menuTable)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'detail') { //查看
+
+                //do somehing
+            } else if (layEvent === 'del') { //删除
+                layer.confirm('你他妈试试', function (index) {
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    //向服务端发送删除指令
+                    $.ajax({
+                        url: '/emims/api/menu/' + data.id,
+                        type: 'delete',
+                        success: function (data) {
+                            layer.msg(data.message)
+                        },
+                        fail: function (data) {
+
+                        }
+                    })
+                    layer.close(index);
+                });
+            } else if (layEvent === 'edit') { //编辑
+                //do something
+
+                //同步更新缓存对应的值
+                obj.update({
+                    username: '123'
+                    , title: 'xxx'
+                });
+            }
+        });
+        //表格初始化
+        table.init('menuTable', menuTableOptions);
+        //加载树形菜单
+
+        $.ajax({
+            url: '/emims/api/menu/node',
+            type: 'get',
+            success: function (data) {
+                treeOptions.nodes = data.data
+                tree(treeOptions);
+            },
+            fail: function (data) {
+                layer.msg("节点信息获取失败")
+            }
+        })
+
+        //新增菜单按钮点击事件
+        $('#addMenuBtn').click(function () {
+            var allNode = new Array();
+            //获取菜单数据
+            $.ajax({
+                url: '/emims/api/menu',
+                data: {
+                    page: 1,
+                    size: 100
+                },
+                type: 'get',
+                success: function (data) {
+                    allNode = data.data
+                    var optionArray=new Array();
+                    for (var i = 0; i < allNode.length; i++) {
+                        if (i == 0) {
+                            optionArray.push("<option value=\"0\"></option>")
+                        }
+                        optionArray.push("<option value=\"" + allNode[i].id + "\">" + allNode[i].nodeName + "</option>")
+                    }
+                    var options=optionArray.join("\n");
+                    formText[1]=options;
+                    var index=layer.open({
+                        type: 1,
+                        title: '新增菜单',
+                        content: $(formText.join("")).html(),
+                        area: ['800px', '400px'],
+                        btn: ['保存', '重置'],
+                        yes: function (index, layero) {
+                            //按钮【按钮一】的回调
+                            //保存菜单
+                            $.ajax({
+                                url: '/emims/api/menu',
+                                type: 'post',
+                                data: {
+                                    nodeName: $("#name").val(),
+                                    parentId: $("#parentNodes").val(),
+                                    url: $("#url").val()
+                                },
+                                success: function (data) {
+                                    layer.msg(data.message)
+                                    //保存成功就刷新菜单树和表格
+                                    $.ajax({
+                                        url: '/emims/api/menu/node',
+                                        type: 'get',
+                                        async:false,
+                                        success: function (data) {
+                                            $("#menuTree").children("li").remove();
+                                            treeOptions.nodes = data.data
+                                            tree(treeOptions);
+                                        },
+                                        fail: function (data) {
+                                            layer.msg("节点信息获取失败")
+                                        }
+                                    });
+                                    $("#menuTable").remove();
+                                    table.init('menuTable', menuTableOptions);
+                                    layer.close(index)
+                                }
+                            })
+                        },
+                        btn2: function (index, layero) {
+                            //按钮【按钮二】的回调
+                            return false //开启该代码可禁止点击该按钮关闭
+                        },
+                        cancel: function () {
+                            //右上角关闭回调
+
+                            //return false 开启该代码可禁止点击该按钮关闭
+                        },
+                        success: function () {
+
+                        }
+                    });
+                    form.render("select")
+                    },
+            });
+
+        })
+
+        function deleteMenu() {
+            alert("删除菜单")
+        }
+    });
+
+
+</script>
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <div class="layui-btn-group">
+            <button class="layui-btn layui-btn-primary layui-btn-sm" id="addMenuBtn"><i class="layui-icon"></i>
+            </button>
+            <button class="layui-btn layui-btn-primary layui-btn-sm" onclick="deleteMenu()"><i class="layui-icon"></i>
+            </button>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="menuTblToolBar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <!-- 这里同样支持 laytpl 语法，如： -->
+    {{#  if(d.auth > 2){ }}
+    <a class="layui-btn layui-btn-xs" lay-event="check">审核</a>
+    {{#  } }}
+</script>
+</body>
+</html>

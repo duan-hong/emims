@@ -3,6 +3,7 @@ package top.duanhong.emims.service.systemservice;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import top.duanhong.emims.pojo.dto.response.BaseResponse;
+import top.duanhong.emims.pojo.dto.response.MethodExecuteResult;
 import top.duanhong.emims.pojo.po.Menu;
 
 /**
@@ -42,7 +43,7 @@ public interface MenuService {
      * 获取所有节点
      * @return
      */
-    BaseResponse getAllNode();
+    MethodExecuteResult getAllNode();
 
     /**
      * 根据菜单id获取面包屑

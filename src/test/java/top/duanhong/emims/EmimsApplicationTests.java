@@ -1,6 +1,6 @@
 package top.duanhong.emims;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -9,14 +9,13 @@ import top.duanhong.emims.pojo.dto.response.BaseResponse;
 import top.duanhong.emims.pojo.po.SysUser;
 import top.duanhong.emims.service.systemservice.MenuService;
 
-import java.util.List;
 
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 public class EmimsApplicationTests {
     @Autowired
     MenuService menuService;
+
     @Test
     public void encodeTest(){
         BaseResponse baseResponse=menuService.getCrumble(126);
